@@ -1,0 +1,7 @@
+**
+!Dockerfile
+!requirements.txt
+!src/
+!src/*.py
+!scripts/
+!scripts/probar_servicio.py

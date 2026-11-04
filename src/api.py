@@ -32,8 +32,13 @@ def crear_app(cargador=cargar_modelo):
     app = FastAPI(title="Temperatura de colmena a una hora", lifespan=lifespan)
 
     @app.get("/health")
+    @app.get("/health/ready")
     def health():
         return {"estado": "ok", **app.state.identidad}
+
+    @app.get("/health/live")
+    def live():
+        return {"estado": "ok"}
 
     @app.post("/predecir")
     def predecir(solicitud: Solicitud):

@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: inicializar-modelo
+  namespace: apiario-v1
+spec:
+  backoffLimit: 1
+  activeDeadlineSeconds: 1800
+  template:
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        runAsNonRoot: true
+      containers:
+        - name: inicializar
+          image: temperatura-mlops:1.0.0
+          imagePullPolicy: IfNotPresent
+          command: [python, -m, src.inicializar, --entrada, /entrada/input/temperature_schwartau.csv]
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: http://mlflow:5000
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {cpu: "2", memory: 2Gi}
+          volumeMounts:
+            - name: datos
+              mountPath: /entrada
+              readOnly: true
+      volumes:
+        - name: datos
+          persistentVolumeClaim:
+            claimName: mlflow-data

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from tempfile import TemporaryDirectory
 
 import mlflow
@@ -20,6 +21,9 @@ def registrar(run_id, alias="candidate"):
 def cargar_modelo(alias="champion"):
     conectar_mlflow()
     version = mlflow.MlflowClient().get_model_version_by_alias(MODELO, alias)
+    esperada = os.getenv("MODEL_VERSION_EXPECTED")
+    if esperada and str(version.version) != esperada:
+        raise ValueError(f"El alias resuelve v{version.version}, pero el despliegue exige v{esperada}.")
     modelo = mlflow.sklearn.load_model(f"models:/{MODELO}/{version.version}")
     with TemporaryDirectory() as temporal:
         archivo = mlflow.artifacts.download_artifacts(run_id=version.run_id,

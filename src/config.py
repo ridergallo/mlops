@@ -18,5 +18,8 @@ def guardar_json(ruta, contenido):
 
 def conectar_mlflow():
     import mlflow
-    (RAIZ / "artifacts").mkdir(exist_ok=True)
-    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", f"sqlite:///{(RAIZ / 'artifacts/mlflow.db').as_posix()}"))
+    uri = os.getenv("MLFLOW_TRACKING_URI")
+    if not uri:
+        (RAIZ / "artifacts").mkdir(exist_ok=True)
+        uri = f"sqlite:///{(RAIZ / 'artifacts/mlflow.db').as_posix()}"
+    mlflow.set_tracking_uri(uri)
