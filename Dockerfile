@@ -17,6 +17,7 @@ RUN groupadd --gid 10001 appgroup \
 
 COPY --chown=appuser:appgroup src/ src/
 COPY --chown=appuser:appgroup scripts/probar_servicio.py scripts/probar_servicio.py
+COPY --chown=appuser:appgroup scripts/smoke.py scripts/smoke.py
 USER 10001:10001
 EXPOSE 8000 5000
 

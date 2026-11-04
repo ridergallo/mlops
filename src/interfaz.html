@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Temperatura de colmena</title>
+<style>
+body{font:17px system-ui;background:#f5f3ec;color:#23342e;margin:0;padding:3rem 1rem}
+main{max-width:620px;margin:auto;background:white;padding:2rem;border-radius:16px}
+h1{font-size:1.8rem}label{display:block;margin-top:1.4rem}input,button{font:inherit;box-sizing:border-box;width:100%;padding:.8rem;margin-top:.5rem}
+button{background:#215943;color:white;border:0;border-radius:6px;cursor:pointer}small{color:#53635b}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5f2;padding:1rem}a{color:#215943}
+</style>
+<main>
+<h1>Temperatura de colmena</h1>
+<p>Pronóstico de la temperatura media de la próxima hora.</p>
+<form id="formulario">
+<label for="hora">Cierre de la última hora observada (UTC)</label>
+<input id="hora" value="2018-01-01T06:00:00Z" required>
+<label for="temperaturas">Seis temperaturas horarias en °C</label>
+<input id="temperaturas" value="20.1, 20.3, 20.5, 20.8, 21.0, 21.2" required>
+<small>De la más antigua a la más reciente. Separar con comas y usar punto decimal. Sin horas faltantes.</small>
+<button id="enviar">Obtener pronóstico</button>
+</form>
+<pre id="resultado" role="status" aria-live="polite">Introduce las observaciones para consultar el modelo.</pre>
+<p><small>Demostración académica. No es un diagnóstico de salud de la colmena. La referencia de persistencia puede ser el modelo seleccionado.</small></p>
+<a href="/docs">Documentación de la API</a>
+</main>
+<script>
+const form=document.getElementById('formulario'), salida=document.getElementById('resultado'), boton=document.getElementById('enviar');
+form.addEventListener('submit',async event=>{
+ event.preventDefault();boton.disabled=true;
+ try {
+  const partes=document.getElementById('temperaturas').value.split(',');
+  const temperaturas=partes.map(v=>Number(v.trim()));
+  if(partes.some(v=>!v.trim())||temperaturas.length!==6||!temperaturas.every(Number.isFinite))throw Error('Introduce exactamente seis números.');
+  const respuesta=await fetch('/predecir',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({hora:document.getElementById('hora').value,temperaturas})});
+  const datos=await respuesta.json();
+  if(!respuesta.ok)throw Error(JSON.stringify(datos.detail));
+  salida.textContent=`Temperatura prevista: ${datos.temperatura_predicha_c.toFixed(2)} °C\nHora objetivo: ${datos.hora_objetivo}\nVersión: ${datos.version}\nRun: ${datos.run_id}\nPod: ${datos.pod}`;
+ }catch(error){salida.textContent=`No se pudo predecir: ${error.message}`;}
+ finally{boton.disabled=false;}
+});
+</script>
+</html>

@@ -1,0 +1,43 @@
+name: CD local Kubernetes
+on:
+  workflow_dispatch:
+    inputs:
+      imagen:
+        description: 'Imagen verificada: ghcr.io/usuario/repositorio@sha256:...'
+        required: true
+        type: string
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: powershell
+concurrency:
+  group: apiario-despliegue-ct
+  cancel-in-progress: false
+jobs:
+  desplegar:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Windows, apiario]
+    environment: laboratorio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Desplegar imagen por digest
+        shell: powershell
+        env:
+          IMAGEN: ${{ inputs.imagen }}
+          DATASET_PATH: ${{ vars.DATASET_PATH }}
+        run: |
+          if (-not $env:DATASET_PATH -or -not (Test-Path -LiteralPath $env:DATASET_PATH -PathType Leaf)) { throw 'Configurar DATASET_PATH con el CSV preparado.' }
+          if ($env:IMAGEN -notmatch '^ghcr\.io/[a-z0-9_./-]+@sha256:[a-f0-9]{64}$') { throw 'Usar una imagen GHCR por digest.' }
+          docker pull $env:IMAGEN
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudo descargar la imagen.' }
+          ./scripts/desplegar_kubernetes.ps1 -Imagen $env:IMAGEN -Dataset $env:DATASET_PATH -OmitirConstruccion
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/verificar_kubernetes.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencia-cd
+          path: evidencias/kubernetes.json

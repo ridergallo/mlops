@@ -80,14 +80,18 @@ def verificar(contexto):
         # Una revisión de configuración demuestra rollout y retorno a la revisión previa.
         kube("set", "env", "deployment/temperatura-api", "DEMO_REVISION=2")
         esperar()
+        time.sleep(5)  # Dar tiempo a la actualizacion de endpoints del Service.
         informe["rollout"] = json.loads(kube(*comando, "--peticiones", "30", "--min-pods", "2"))
         kube("rollout", "undo", "deployment/temperatura-api")
         esperar()
+        time.sleep(5)
         informe["rollback"] = json.loads(kube(*comando, "--peticiones", "30", "--min-pods", "2"))
         informe["estado"] = "correcto"
     except Exception as error:
         informe["estado"] = "fallo"
         informe["error"] = str(error)
+        if isinstance(error, subprocess.CalledProcessError):
+            informe["salida_error"] = error.output
         raise
     finally:
         if trafico is not None and trafico.poll() is None:

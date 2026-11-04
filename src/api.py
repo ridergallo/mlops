@@ -2,11 +2,13 @@
 
 import os
 import socket
+from pathlib import Path
 from contextlib import asynccontextmanager
 from datetime import timedelta
 
 import numpy as np
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Annotated
 
@@ -30,6 +32,10 @@ def crear_app(cargador=cargar_modelo):
         yield
 
     app = FastAPI(title="Temperatura de colmena a una hora", lifespan=lifespan)
+
+    @app.get("/", response_class=HTMLResponse)
+    def interfaz():
+        return Path(__file__).with_name("interfaz.html").read_text(encoding="utf-8")
 
     @app.get("/health")
     @app.get("/health/ready")

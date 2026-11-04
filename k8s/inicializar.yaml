@@ -18,7 +18,7 @@ spec:
         - name: inicializar
           image: temperatura-mlops:1.0.0
           imagePullPolicy: IfNotPresent
-          command: [python, -m, src.inicializar, --entrada, /entrada/input/temperature_schwartau.csv]
+          command: [python, -m, src.inicializar, --entrada, /entrada/input/temperatura.csv, --actualizar-politica]
           env:
             - name: MLFLOW_TRACKING_URI
               value: http://mlflow:5000

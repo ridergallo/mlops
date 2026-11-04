@@ -40,6 +40,7 @@ spec:
             - --host=0.0.0.0
             - --port=5000
             - --workers=1
+            - --gunicorn-opts=--threads=4
             - --backend-store-uri=sqlite:////mlflow/mlflow.db
             - --serve-artifacts
             - --default-artifact-root=mlflow-artifacts:/

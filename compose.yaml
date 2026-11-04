@@ -12,6 +12,7 @@ services:
       - --host=0.0.0.0
       - --port=5000
       - --workers=1
+      - --gunicorn-opts=--threads=4
       - --backend-store-uri=sqlite:////mlflow/mlflow.db
       - --serve-artifacts
       - --default-artifact-root=mlflow-artifacts:/
@@ -29,13 +30,13 @@ services:
 
   inicializar:
     image: temperatura-mlops:1.0.0
-    command: ["python", "-m", "src.inicializar"]
+    command: ["python", "-m", "src.inicializar", "--actualizar-politica"]
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:5000
     volumes:
       - type: bind
-        source: ../dataset/temperature_schwartau.csv
-        target: /entrada/temperature_schwartau.csv
+        source: ./data/temperatura.csv
+        target: /entrada/temperatura.csv
         read_only: true
         bind:
           create_host_path: false

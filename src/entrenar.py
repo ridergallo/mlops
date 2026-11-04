@@ -15,16 +15,19 @@ from sklearn.metrics import mean_absolute_error
 from src.config import DATOS, FEATURES, MODELO, RAIZ, conectar_mlflow, guardar_json
 from src.features import cargar, crear_features, dividir
 from src.registrar_modelo import registrar
+from src.modelos import Persistencia
 
 CONFIGURACIONES = [(50, 5), (100, 5), (100, 10), (150, 10), (150, None)]
 
 
-def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True):
+def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True, incluir_persistencia=True, salida=None):
+    salida = Path(salida or RAIZ / "artifacts").resolve()
+    salida.mkdir(parents=True, exist_ok=True)
     conectar_mlflow()
     cliente = mlflow.MlflowClient()
     nombre = "Temperatura-1h"
     if cliente.get_experiment_by_name(nombre) is None:
-        destino = (RAIZ / "artifacts/runs").as_uri() if mlflow.get_tracking_uri().startswith("sqlite:") else None
+        destino = (salida / "runs").as_uri() if mlflow.get_tracking_uri().startswith("sqlite:") else None
         cliente.create_experiment(nombre, artifact_location=destino)
     mlflow.set_experiment(nombre)
     datos = cargar(ruta)
@@ -35,19 +38,22 @@ def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True):
         datos = datos.loc[:limite]
     train, valid, test = dividir(crear_features(datos))
     resultados, modelos = [], []
-    for arboles, profundidad in CONFIGURACIONES:
-        with mlflow.start_run(run_name=f"RF-{arboles}-{profundidad}") as run:
-            modelo = RandomForestRegressor(n_estimators=arboles, max_depth=profundidad,
-                                           min_samples_leaf=3, random_state=42, n_jobs=1)
+    candidatos = [(f"RF-{n}-{p}", RandomForestRegressor(n_estimators=n, max_depth=p,
+                   min_samples_leaf=3, random_state=42, n_jobs=1)) for n, p in CONFIGURACIONES]
+    if incluir_persistencia:
+        candidatos.append(("Persistencia", Persistencia()))
+    for nombre_run, modelo in candidatos:
+        with mlflow.start_run(run_name=nombre_run) as run:
             modelo.fit(train[FEATURES], train.objetivo)
             mae = float(mean_absolute_error(valid.objetivo, modelo.predict(valid[FEATURES])))
             baseline = float(mean_absolute_error(valid.objetivo, valid.temperatura_actual))
-            mlflow.log_params({"arboles": arboles, "profundidad": profundidad, "semilla": 42})
+            mlflow.log_params({"tipo": nombre_run, **modelo.get_params()})
             mlflow.log_metrics({"mae_validacion": mae, "mae_persistencia_validacion": baseline})
             mlflow.sklearn.log_model(modelo, "modelo", input_example=train[FEATURES].head(2),
-                                    signature=infer_signature(train[FEATURES], train.objetivo),
+                                    signature=infer_signature(train[FEATURES], train.objetivo), code_paths=[str(RAIZ / "src")],
                                     pip_requirements=["scikit-learn==1.5.2", "numpy==2.1.3", "pandas==2.2.3"])
-            meta = {"features": FEATURES, "mae_validacion": mae, "train_fin": str(train.target_at.max()),
+            meta = {"features": FEATURES, "tipo": nombre_run, "politica_seleccion": "validacion_con_persistencia_v1",
+                    "mae_validacion": mae, "train_fin": str(train.target_at.max()),
                     "test_inicio": str(test.index.min()), "test_fin": str(test.target_at.max()),
                     "dataset_sha256": hashlib.sha256(Path(ruta).read_bytes()).hexdigest(),
                     "filas": {"train": len(train), "valid": len(valid), "test": len(test)}}
@@ -56,10 +62,11 @@ def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True):
                 archivo = Path(temporal) / "referencia.csv"
                 train[FEATURES].to_csv(archivo)
                 mlflow.log_artifact(str(archivo))
-            resultados.append({"run_id": run.info.run_id, "mae_validacion": mae})
+            resultados.append({"run_id": run.info.run_id, "tipo": nombre_run, "mae_validacion": mae})
             modelos.append(modelo)
 
-    orden = sorted(range(len(resultados)), key=lambda i: resultados[i]["mae_validacion"])
+    # En empate se prefiere la referencia más sencilla. El test no selecciona.
+    orden = sorted(range(len(resultados)), key=lambda i: (resultados[i]["mae_validacion"], resultados[i]["tipo"] != "Persistencia"))
     ganador = resultados[orden[0]]
     modelo = modelos[orden[0]]
     mae_test = float(mean_absolute_error(test.objetivo, modelo.predict(test[FEATURES])))
@@ -68,7 +75,7 @@ def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True):
     with mlflow.start_run(run_id=ganador["run_id"]):
         mlflow.log_metrics({"mae_test": mae_test, "mae_persistencia_test": persistencia})
         
-    resumen = {"mejor_run_id": ganador["run_id"], "runs": resultados,
+    resumen = {"mejor_run_id": ganador["run_id"], "tipo": ganador["tipo"], "runs": resultados,
                "mae_test": mae_test, "mae_persistencia_test": persistencia,
                "test_inicio": str(test.index.min()), "test_fin": str(test.target_at.max())}
     if registrar_inicial:
@@ -79,7 +86,7 @@ def entrenar(ruta=DATOS, hasta=None, registrar_inicial=True):
         alias = "candidate" if hay_campeon else "champion"
         resumen["version"] = registrar(ganador["run_id"], alias)
         resumen["alias"] = alias
-    guardar_json(RAIZ / "artifacts/entrenamiento.json", resumen)
+    guardar_json(salida / "entrenamiento.json", resumen)
     return resumen, modelo, test
 
 

@@ -4,3 +4,5 @@ data/
 artifacts/
 mlruns/
 *.db
+docs/
+evidencias/

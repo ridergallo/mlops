@@ -58,6 +58,7 @@ class FlujoTest(unittest.TestCase):
 
     def test_api_valida_entrada_y_devuelve_version(self):
         with TestClient(crear_app(lambda: (Persistencia(), {"version": "1"}, {}))) as cliente:
+            self.assertEqual(cliente.get("/").status_code, 200)
             solicitud = {"hora": "2020-01-01T06:00:00Z", "temperaturas": [20, 21, 22, 23, 24, 25]}
             respuesta = cliente.post("/predecir", json=solicitud)
             self.assertEqual(respuesta.status_code, 200)

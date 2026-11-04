@@ -1,0 +1,62 @@
+name: CT por snapshot
+on:
+  workflow_dispatch:
+    inputs:
+      sha256:
+        description: SHA-256 del CSV preparado disponible en DATASET_PATH
+        required: true
+        type: string
+      desde:
+        description: Inicio del monitoreo (ISO UTC)
+        required: true
+        type: string
+      hasta:
+        description: Fin observado de la alarma, anterior a la nueva validacion y test
+        required: true
+        type: string
+      promover:
+        description: Promover solo si supera las puertas de calidad
+        default: false
+        type: boolean
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: powershell
+concurrency:
+  group: apiario-despliegue-ct
+  cancel-in-progress: false
+jobs:
+  evaluar:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Windows, apiario]
+    environment: laboratorio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Monitorear y decidir
+        shell: powershell
+        env:
+          DATASET_PATH: ${{ vars.DATASET_PATH }}
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+          SHA256: ${{ inputs.sha256 }}
+          DESDE: ${{ inputs.desde }}
+          HASTA: ${{ inputs.hasta }}
+          PROMOVER: ${{ inputs.promover }}
+        run: |
+          if (-not $env:DATASET_PATH -or -not (Test-Path -LiteralPath $env:DATASET_PATH -PathType Leaf)) { throw 'Configurar DATASET_PATH con el snapshot preparado.' }
+          if (-not $env:MLFLOW_TRACKING_URI) { throw 'Configurar MLFLOW_TRACKING_URI del Registry de destino.' }
+          $Parametros = @('--datos', $env:DATASET_PATH, '--sha256', $env:SHA256, '--desde', $env:DESDE, '--hasta', $env:HASTA)
+          if ($env:PROMOVER -eq 'true') { $Parametros += '--promover' }
+          python -m src.ciclo_ct @Parametros
+          if ($LASTEXITCODE -ne 0) { throw 'CT fallo; revisar el informe.' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencia-ct
+          path: |
+            artifacts/decision_ct.json
+            artifacts/monitoreo_normal.*

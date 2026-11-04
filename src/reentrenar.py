@@ -14,7 +14,7 @@ from src.features import cargar, crear_features, dividir
 from src.registrar_modelo import cargar_modelo, registrar
 
 
-def reentrenar(ruta, informe, promover=False):
+def reentrenar(ruta, informe, promover=False, salida=None):
     if not informe.get("reentrenar"):
         return {"estado": "sin_alarma", "promovido": False}
     if informe.get("escenario") != "normal":
@@ -23,15 +23,25 @@ def reentrenar(ruta, informe, promover=False):
     if any(informe.get(k) != identidad[k] for k in ("modelo", "version", "run_id")):
         raise ValueError("La alarma pertenece a otra versión del modelo.")
     _, valid, _ = dividir(crear_features(cargar(ruta)))
-    if valid.index.min() <= max(pd.Timestamp(meta["test_fin"]), pd.Timestamp(informe["hasta"])):
+    cliente = mlflow.MlflowClient()
+    consumido = cliente.get_model_version(MODELO, identidad["version"]).tags.get("ct_test_fin")
+    frontera = max(pd.Timestamp(meta["test_fin"]), pd.Timestamp(informe["hasta"]))
+    if isinstance(consumido, str):
+        frontera = max(frontera, pd.Timestamp(consumido))
+    if valid.index.min() <= frontera:
         raise ValueError("Faltan datos posteriores: reservar validación y test nuevos después de la alarma.")
-    resumen, _, test = entrenar(ruta, registrar_inicial=False)
+    # Reservar también los periodos de candidatos rechazados: no reutilizar su test.
+    _, _, reservado = dividir(crear_features(cargar(ruta)))
+    cliente.set_model_version_tag(MODELO, identidad["version"], "ct_test_fin", str(reservado.target_at.max()))
+    resumen, _, test = entrenar(ruta, registrar_inicial=False, incluir_persistencia=False, salida=salida)
     error_anterior = float(mean_absolute_error(test.objetivo, campeon.predict(test[FEATURES])))
     aprobado = resumen["mae_test"] < min(error_anterior * 0.95, resumen["mae_persistencia_test"])
     version = registrar(resumen["mejor_run_id"], "candidate")
     decision = {"estado": "aprobado" if aprobado else "rechazado", "promovido": False,
                 "mae_anterior": error_anterior, "mae_candidato": resumen["mae_test"],
                 "version_anterior": identidad["version"], "version_candidata": version}
+    decision.update({"run_candidato": resumen["mejor_run_id"], "mae_persistencia": resumen["mae_persistencia_test"],
+                     "test_fin": str(test.target_at.max())})
     if aprobado and promover:
         cliente = mlflow.MlflowClient()
         if str(cliente.get_model_version_by_alias(MODELO, "champion").version) != identidad["version"]:
