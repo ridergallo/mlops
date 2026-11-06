@@ -1,0 +1,18 @@
+{
+  "estado": "correcto",
+  "errores_javascript": [],
+  "casos": [
+    "fecha inexistente",
+    "rango inválido",
+    "coma decimal",
+    "chat paso a paso",
+    "confirmación explícita",
+    "inferencia real",
+    "gráfica",
+    "edición",
+    "error HTTP y reintento",
+    "reinicio",
+    "ejemplo",
+    "vista móvil"
+  ]
+}

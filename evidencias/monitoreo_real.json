@@ -1,0 +1,136 @@
+{
+  "modelo": "colmena-temperatura-1h",
+  "version": "4",
+  "run_id": "088681f5c6a840608cd4165ac4906150",
+  "desde": "2018-01-01 00:00:00+00:00",
+  "hasta": "2018-02-01 00:00:00+00:00",
+  "escenario": "normal",
+  "umbral_mae": 0.771103414823438,
+  "umbral_ks": 0.2,
+  "reentrenar": false,
+  "lotes": [
+    {
+      "inicio": "2018-01-01 00:00:00+00:00",
+      "fin": "2018-01-08 00:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 0.08568908730158731,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.9144685802948022,
+          "p_valor_descriptivo": 1.7453936062322422e-174
+        },
+        "temperatura_hace_1h": {
+          "D": 0.9144685802948022,
+          "p_valor_descriptivo": 1.7453936062322422e-174
+        },
+        "temperatura_hace_2h": {
+          "D": 0.9144685802948022,
+          "p_valor_descriptivo": 1.7453936062322422e-174
+        },
+        "media_6h": {
+          "D": 0.9177657098525989,
+          "p_valor_descriptivo": 2.866996103317826e-177
+        }
+      },
+      "data_drift": true,
+      "racha": 0,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2018-01-08 00:00:00+00:00",
+      "fin": "2018-01-15 00:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 0.09199117063492065,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.9972847168347556,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 0.9972847168347556,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 0.9972847168347556,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 0.997866563227308,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 0,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2018-01-15 00:00:00+00:00",
+      "fin": "2018-01-22 00:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 0.05994255952380951,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.9934057408844065,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 0.9934057408844065,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 0.9934057408844065,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 0.993599689681924,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 0,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2018-01-22 00:00:00+00:00",
+      "fin": "2018-01-29 00:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 0.11336130952380948,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.8558960434445306,
+          "p_valor_descriptivo": 3.188091262793588e-137
+        },
+        "temperatura_hace_1h": {
+          "D": 0.8558960434445306,
+          "p_valor_descriptivo": 3.188091262793588e-137
+        },
+        "temperatura_hace_2h": {
+          "D": 0.8558960434445306,
+          "p_valor_descriptivo": 3.188091262793588e-137
+        },
+        "media_6h": {
+          "D": 0.8601629169899146,
+          "p_valor_descriptivo": 2.0936296188567027e-139
+        }
+      },
+      "data_drift": true,
+      "racha": 0,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2018-01-29 00:00:00+00:00",
+      "fin": "2018-02-05 00:00:00+00:00",
+      "maduro": false,
+      "cobertura": 0.43452380952380953,
+      "mae": null,
+      "ks": {},
+      "data_drift": false,
+      "racha": 0,
+      "alarma_desempeno": false
+    }
+  ]
+}

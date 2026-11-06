@@ -1,0 +1,214 @@
+{
+  "fecha_utc": "2026-11-05T00:26:05.909777+00:00",
+  "contexto": "docker-desktop",
+  "replicas_iniciales": [
+    {
+      "nombre": "temperatura-api-8664cdc4b7-bg6hc",
+      "uid": "972e481e-6ee5-4336-bfb9-d1d1d51def00",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-hmd6k",
+      "uid": "93adc391-6973-4bb9-8799-df4a94477ac7",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-tjrq5",
+      "uid": "f6d384aa-c117-45ce-b221-70915d0335a9",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    }
+  ],
+  "balanceo": {
+    "peticiones": 100,
+    "respuestas_por_pod": {
+      "temperatura-api-8664cdc4b7-tjrq5": 38,
+      "temperatura-api-8664cdc4b7-hmd6k": 27,
+      "temperatura-api-8664cdc4b7-bg6hc": 35
+    },
+    "versiones_y_runs": [
+      [
+        "4",
+        "b73ed3cff6494b8eb7f882f027642796"
+      ]
+    ],
+    "errores": [],
+    "latencia_max_ms": 29.7
+  },
+  "trafico_durante_eliminacion": {
+    "peticiones": 150,
+    "respuestas_por_pod": {
+      "temperatura-api-8664cdc4b7-bg6hc": 5,
+      "temperatura-api-8664cdc4b7-hmd6k": 62,
+      "temperatura-api-8664cdc4b7-tjrq5": 56,
+      "temperatura-api-8664cdc4b7-bcb9c": 27
+    },
+    "versiones_y_runs": [
+      [
+        "4",
+        "b73ed3cff6494b8eb7f882f027642796"
+      ]
+    ],
+    "errores": [],
+    "latencia_max_ms": 18.92
+  },
+  "codigo_trafico": 0,
+  "pod_eliminado": {
+    "nombre": "temperatura-api-8664cdc4b7-bg6hc",
+    "uid": "972e481e-6ee5-4336-bfb9-d1d1d51def00",
+    "ready": true,
+    "fase": "Running",
+    "imagen_id": [
+      "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+    ]
+  },
+  "replicas_recuperadas": [
+    {
+      "nombre": "temperatura-api-8664cdc4b7-bcb9c",
+      "uid": "599a6654-a4b6-4c48-84f2-19d5f597a524",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-hmd6k",
+      "uid": "93adc391-6973-4bb9-8799-df4a94477ac7",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-tjrq5",
+      "uid": "f6d384aa-c117-45ce-b221-70915d0335a9",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    }
+  ],
+  "escalado_cinco": [
+    {
+      "nombre": "temperatura-api-8664cdc4b7-bcb9c",
+      "uid": "599a6654-a4b6-4c48-84f2-19d5f597a524",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-hmd6k",
+      "uid": "93adc391-6973-4bb9-8799-df4a94477ac7",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-m8b5l",
+      "uid": "131392a4-a1c0-4064-b31d-7080f2ef5706",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-tjrq5",
+      "uid": "f6d384aa-c117-45ce-b221-70915d0335a9",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-x8bjw",
+      "uid": "7dedb2b8-9b67-4b96-a00c-a7658906748e",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    }
+  ],
+  "escalado_tres": [
+    {
+      "nombre": "temperatura-api-8664cdc4b7-bcb9c",
+      "uid": "599a6654-a4b6-4c48-84f2-19d5f597a524",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-hmd6k",
+      "uid": "93adc391-6973-4bb9-8799-df4a94477ac7",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    },
+    {
+      "nombre": "temperatura-api-8664cdc4b7-tjrq5",
+      "uid": "f6d384aa-c117-45ce-b221-70915d0335a9",
+      "ready": true,
+      "fase": "Running",
+      "imagen_id": [
+        "docker.io/library/temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+      ]
+    }
+  ],
+  "rollout": {
+    "peticiones": 30,
+    "respuestas_por_pod": {
+      "temperatura-api-8664cdc4b7-hmd6k": 10,
+      "temperatura-api-8664cdc4b7-bcb9c": 11,
+      "temperatura-api-8664cdc4b7-tjrq5": 9
+    },
+    "versiones_y_runs": [
+      [
+        "4",
+        "b73ed3cff6494b8eb7f882f027642796"
+      ]
+    ],
+    "errores": [],
+    "latencia_max_ms": 20.75
+  },
+  "rollback": {
+    "peticiones": 30,
+    "respuestas_por_pod": {
+      "temperatura-api-68774df5b9-8jncq": 15,
+      "temperatura-api-68774df5b9-j676v": 5,
+      "temperatura-api-68774df5b9-7sxnl": 10
+    },
+    "versiones_y_runs": [
+      [
+        "4",
+        "b73ed3cff6494b8eb7f882f027642796"
+      ]
+    ],
+    "errores": [],
+    "latencia_max_ms": 21.27
+  },
+  "estado": "correcto"
+}

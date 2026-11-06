@@ -1,0 +1,11 @@
+{
+  "archivo": "data/temperatura.csv",
+  "sha256": "dfd35799dd2d89e61e5b666b231c337b1a483ac2e1883acefd626c2e2995b91e",
+  "filas": 21120,
+  "inicio": "2017-01-01 14:00:00+00:00",
+  "fin": "2019-05-31 13:00:00+00:00",
+  "horas_sin_dato": 175,
+  "zona": "UTC",
+  "procedencia": "CSV real Schwartau proporcionado localmente; ver docs/ENTREGA.md",
+  "licencia": "Pendiente de confirmar con la fuente; dataset excluido del paquete de entrega"
+}

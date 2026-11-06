@@ -4,8 +4,10 @@ data/
 artifacts/
 mlruns/
 *.db
-docs/
-evidencias/
+docs/diagrama_ejecutivo
+docs/docker_ejecutivo
+docs/informe_final
+docs/kubernetes_ejecutivo
 scripts/capturar_informe.py
 scripts/diagrama_docker.py
 scripts/diagrama_ejecutivo.py

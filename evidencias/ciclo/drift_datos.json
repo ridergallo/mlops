@@ -1,0 +1,219 @@
+{
+  "desde": "2020-01-01 05:00:00+00:00",
+  "hasta": "2020-02-19 23:00:00+00:00",
+  "escenario": "datos",
+  "umbral_mae": 0.6,
+  "umbral_ks": 0.2,
+  "reentrenar": true,
+  "lotes": [
+    {
+      "inicio": "2020-01-01 05:00:00+00:00",
+      "fin": "2020-01-08 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 7.99647690308238,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 1,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2020-01-08 05:00:00+00:00",
+      "fin": "2020-01-15 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 7.998816911314266,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 2,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2020-01-15 05:00:00+00:00",
+      "fin": "2020-01-22 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 8.001739230463093,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 3,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-01-22 05:00:00+00:00",
+      "fin": "2020-01-29 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 8.003805508219632,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 4,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-01-29 05:00:00+00:00",
+      "fin": "2020-02-05 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 8.003998731988311,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 5,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-05 05:00:00+00:00",
+      "fin": "2020-02-12 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 8.002223797901374,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 6,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-12 05:00:00+00:00",
+      "fin": "2020-02-19 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 7.999354320513788,
+      "ks": {
+        "temperatura_actual": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_1h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "temperatura_hace_2h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        },
+        "media_6h": {
+          "D": 1.0,
+          "p_valor_descriptivo": 0.0
+        }
+      },
+      "data_drift": true,
+      "racha": 7,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-19 05:00:00+00:00",
+      "fin": "2020-02-26 05:00:00+00:00",
+      "maduro": false,
+      "cobertura": 0.1130952380952381,
+      "mae": null,
+      "ks": {},
+      "data_drift": false,
+      "racha": 0,
+      "alarma_desempeno": false
+    }
+  ],
+  "procedencia": "synthetic; semilla 42",
+  "codigo_detector": 1
+}

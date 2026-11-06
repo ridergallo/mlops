@@ -1,0 +1,5 @@
+{
+  "comando": "docker run --rm temperatura-mlops:1.0.0 python scripts/smoke.py",
+  "exit_code": 0,
+  "github_actions": false
+}

@@ -1,0 +1,12 @@
+{
+  "estado": "aprobado",
+  "promovido": true,
+  "mae_anterior": 4.456319284070986,
+  "mae_candidato": 0.004134179882957791,
+  "version_anterior": "2",
+  "version_candidata": "3",
+  "run_candidato": "241275c2754940fa91849a05a172b87c",
+  "mae_persistencia": 2.519042679600508,
+  "test_fin": "2020-09-06 23:00:00+00:00",
+  "procedencia": "synthetic; Registry aislado, no cambia el despliegue"
+}

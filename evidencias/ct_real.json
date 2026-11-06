@@ -1,0 +1,7 @@
+{
+  "estado": "sin_alarma",
+  "promovido": false,
+  "dataset_sha256": "dfd35799dd2d89e61e5b666b231c337b1a483ac2e1883acefd626c2e2995b91e",
+  "desde": "2018-01-01T00:00:00Z",
+  "hasta": "2018-02-01T00:00:00Z"
+}

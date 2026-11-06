@@ -1,0 +1,15 @@
+test_agregacion_cerrada_y_hora_ambigua (test_flujo.FlujoTest.test_agregacion_cerrada_y_hora_ambigua) ... ok
+test_api_valida_entrada_y_devuelve_version (test_flujo.FlujoTest.test_api_valida_entrada_y_devuelve_version) ... ok
+test_ct_compara_y_promueve_solo_si_mejora (test_flujo.FlujoTest.test_ct_compara_y_promueve_solo_si_mejora) ... ok
+test_ct_no_entrena_sin_alarma_ni_con_etiquetas_simuladas (test_flujo.FlujoTest.test_ct_no_entrena_sin_alarma_ni_con_etiquetas_simuladas) ... ok
+test_drift_normal_concepto_y_etiquetas_pendientes (test_flujo.FlujoTest.test_drift_normal_concepto_y_etiquetas_pendientes) ... ok
+test_features_causales_y_paridad_api (test_flujo.FlujoTest.test_features_causales_y_paridad_api) ... ok
+test_huecos_y_purga (test_flujo.FlujoTest.test_huecos_y_purga) ... ok
+test_csv_preparado_y_reutilizacion (test_inicializar.InicializarTest.test_csv_preparado_y_reutilizacion) ... ok
+test_snapshot_distinto_no_llega_al_monitoreo (test_protecciones.ProteccionesTest.test_snapshot_distinto_no_llega_al_monitoreo) ... ok
+test_version_incorrecta_no_descarga_modelo (test_protecciones.ProteccionesTest.test_version_incorrecta_no_descarga_modelo) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.217s
+
+OK

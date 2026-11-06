@@ -1,0 +1,219 @@
+{
+  "desde": "2020-01-01 05:00:00+00:00",
+  "hasta": "2020-02-19 23:00:00+00:00",
+  "escenario": "concepto",
+  "umbral_mae": 0.6,
+  "umbral_ks": 0.2,
+  "reentrenar": true,
+  "lotes": [
+    {
+      "inicio": "2020-01-01 05:00:00+00:00",
+      "fin": "2020-01-08 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 5.00352309691762,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.05741681609882443,
+          "p_valor_descriptivo": 0.6956359518664851
+        },
+        "temperatura_hace_1h": {
+          "D": 0.055932456664674224,
+          "p_valor_descriptivo": 0.725636181112513
+        },
+        "temperatura_hace_2h": {
+          "D": 0.05444809723052402,
+          "p_valor_descriptivo": 0.7551060422262081
+        },
+        "media_6h": {
+          "D": 0.053705917513448886,
+          "p_valor_descriptivo": 0.769566371578481
+        }
+      },
+      "data_drift": false,
+      "racha": 1,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2020-01-08 05:00:00+00:00",
+      "fin": "2020-01-15 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 5.0011830886857345,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.08329846582984657,
+          "p_valor_descriptivo": 0.24554281908543052
+        },
+        "temperatura_hace_1h": {
+          "D": 0.08181410639569642,
+          "p_valor_descriptivo": 0.2640620367681715
+        },
+        "temperatura_hace_2h": {
+          "D": 0.08032974696154616,
+          "p_valor_descriptivo": 0.2835791419447248
+        },
+        "media_6h": {
+          "D": 0.07958756724447102,
+          "p_valor_descriptivo": 0.2937155856527277
+        }
+      },
+      "data_drift": false,
+      "racha": 2,
+      "alarma_desempeno": false
+    },
+    {
+      "inicio": "2020-01-15 05:00:00+00:00",
+      "fin": "2020-01-22 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 4.998260769536907,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.07958756724447102,
+          "p_valor_descriptivo": 0.2937155856527277
+        },
+        "temperatura_hace_1h": {
+          "D": 0.08107192667862129,
+          "p_valor_descriptivo": 0.2736950337430373
+        },
+        "temperatura_hace_2h": {
+          "D": 0.08255628611277155,
+          "p_valor_descriptivo": 0.25467858926557374
+        },
+        "media_6h": {
+          "D": 0.08329846582984657,
+          "p_valor_descriptivo": 0.24554281908543052
+        }
+      },
+      "data_drift": false,
+      "racha": 3,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-01-22 05:00:00+00:00",
+      "fin": "2020-01-29 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 4.9961944917803685,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.05621637776449495,
+          "p_valor_descriptivo": 0.7199316424806664
+        },
+        "temperatura_hace_1h": {
+          "D": 0.05602709703128117,
+          "p_valor_descriptivo": 0.7237367374450409
+        },
+        "temperatura_hace_2h": {
+          "D": 0.056674636381749355,
+          "p_valor_descriptivo": 0.7106876614460507
+        },
+        "media_6h": {
+          "D": 0.05741681609882443,
+          "p_valor_descriptivo": 0.6956359518664851
+        }
+      },
+      "data_drift": false,
+      "racha": 4,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-01-29 05:00:00+00:00",
+      "fin": "2020-02-05 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 4.996001268011689,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.05446304044630412,
+          "p_valor_descriptivo": 0.7548128038957505
+        },
+        "temperatura_hace_1h": {
+          "D": 0.05465232117951779,
+          "p_valor_descriptivo": 0.7510917764237761
+        },
+        "temperatura_hace_2h": {
+          "D": 0.05316796174536753,
+          "p_valor_descriptivo": 0.7799089053071173
+        },
+        "media_6h": {
+          "D": 0.05242578202829251,
+          "p_valor_descriptivo": 0.7939612445722278
+        }
+      },
+      "data_drift": false,
+      "racha": 5,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-05 05:00:00+00:00",
+      "fin": "2020-02-12 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 4.997776202098627,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.07365012950787009,
+          "p_valor_descriptivo": 0.3839026752826894
+        },
+        "temperatura_hace_1h": {
+          "D": 0.07216577007371983,
+          "p_valor_descriptivo": 0.4089245915423626
+        },
+        "temperatura_hace_2h": {
+          "D": 0.07068141063956962,
+          "p_valor_descriptivo": 0.43488266453286784
+        },
+        "media_6h": {
+          "D": 0.06993923092249454,
+          "p_valor_descriptivo": 0.448198476857245
+        }
+      },
+      "data_drift": false,
+      "racha": 6,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-12 05:00:00+00:00",
+      "fin": "2020-02-19 05:00:00+00:00",
+      "maduro": true,
+      "cobertura": 1.0,
+      "mae": 5.000645679486213,
+      "ks": {
+        "temperatura_actual": {
+          "D": 0.08839908348276548,
+          "p_valor_descriptivo": 0.18925684283245114
+        },
+        "temperatura_hace_1h": {
+          "D": 0.08988344291691572,
+          "p_valor_descriptivo": 0.17491881022025035
+        },
+        "temperatura_hace_2h": {
+          "D": 0.09136780235106595,
+          "p_valor_descriptivo": 0.16145007451175175
+        },
+        "media_6h": {
+          "D": 0.09210998206814106,
+          "p_valor_descriptivo": 0.1550319719221377
+        }
+      },
+      "data_drift": false,
+      "racha": 7,
+      "alarma_desempeno": true
+    },
+    {
+      "inicio": "2020-02-19 05:00:00+00:00",
+      "fin": "2020-02-26 05:00:00+00:00",
+      "maduro": false,
+      "cobertura": 0.1130952380952381,
+      "mae": null,
+      "ks": {},
+      "data_drift": false,
+      "racha": 0,
+      "alarma_desempeno": false
+    }
+  ],
+  "procedencia": "synthetic; semilla 42",
+  "codigo_detector": 1
+}

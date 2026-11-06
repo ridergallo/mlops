@@ -1,0 +1,298 @@
+{
+  "fecha_utc": "2026-11-04 05:10:33.578737+00:00",
+  "tracking_uri": "http://127.0.0.1:15050",
+  "modelo": {
+    "modelo": "colmena-temperatura-1h",
+    "version": "4",
+    "run_id": "088681f5c6a840608cd4165ac4906150"
+  },
+  "metadatos": {
+    "features": [
+      "temperatura_actual",
+      "temperatura_hace_1h",
+      "temperatura_hace_2h",
+      "media_6h"
+    ],
+    "tipo": "Persistencia",
+    "politica_seleccion": "validacion_con_persistencia_v1",
+    "mae_validacion": 0.271103414823438,
+    "train_fin": "2017-08-10 07:00:00+00:00",
+    "test_inicio": "2017-10-20 23:00:00+00:00",
+    "test_fin": "2017-12-31 23:00:00+00:00",
+    "dataset_sha256": "dfd35799dd2d89e61e5b666b231c337b1a483ac2e1883acefd626c2e2995b91e",
+    "filas": {
+      "train": 5156,
+      "valid": 1718,
+      "test": 1720
+    }
+  },
+  "health": {
+    "estado": "ok",
+    "modelo": "colmena-temperatura-1h",
+    "version": "4",
+    "run_id": "088681f5c6a840608cd4165ac4906150"
+  },
+  "prediccion": {
+    "temperatura_predicha_c": 21.2,
+    "hora_objetivo": "2018-01-01T07:00:00+00:00",
+    "modelo": "colmena-temperatura-1h",
+    "version": "4",
+    "run_id": "088681f5c6a840608cd4165ac4906150",
+    "pod": "878fe9e9addc"
+  },
+  "entrada_invalida_status": 422,
+  "alias": {
+    "alternativa": "3",
+    "candidate": "4",
+    "champion": "4",
+    "previous": "2"
+  },
+  "versiones": [
+    {
+      "version": "4",
+      "run_id": "088681f5c6a840608cd4165ac4906150"
+    },
+    {
+      "version": "3",
+      "run_id": "cee63dd96a9f432f9aca0419b4b6dee8"
+    },
+    {
+      "version": "2",
+      "run_id": "06c68998c3f44024996d981fc55960f5"
+    },
+    {
+      "version": "1",
+      "run_id": "249a3451b9e64f1c97959fb01df14509"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "088681f5c6a840608cd4165ac4906150",
+      "nombre": "Persistencia",
+      "parametros": {
+        "tipo": "Persistencia"
+      },
+      "metricas": {
+        "mae_validacion": 0.271103414823438,
+        "mae_persistencia_validacion": 0.271103414823438,
+        "mae_test": 0.10649067829457365,
+        "mae_persistencia_test": 0.10649067829457365
+      }
+    },
+    {
+      "run_id": "53fc1a8a3af340b288871493b91718f1",
+      "nombre": "RF-150-None",
+      "parametros": {
+        "tipo": "RF-150-None",
+        "bootstrap": "True",
+        "ccp_alpha": "0.0",
+        "criterion": "squared_error",
+        "max_depth": "None",
+        "max_features": "1.0",
+        "max_leaf_nodes": "None",
+        "max_samples": "None",
+        "min_impurity_decrease": "0.0",
+        "min_samples_leaf": "3",
+        "min_samples_split": "2",
+        "min_weight_fraction_leaf": "0.0",
+        "monotonic_cst": "None",
+        "n_estimators": "150",
+        "n_jobs": "1",
+        "oob_score": "False",
+        "random_state": "42",
+        "verbose": "0",
+        "warm_start": "False"
+      },
+      "metricas": {
+        "mae_validacion": 0.3333269616242278,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "cee63dd96a9f432f9aca0419b4b6dee8",
+      "nombre": "RF-150-10",
+      "parametros": {
+        "tipo": "RF-150-10",
+        "bootstrap": "True",
+        "ccp_alpha": "0.0",
+        "criterion": "squared_error",
+        "max_depth": "10",
+        "max_features": "1.0",
+        "max_leaf_nodes": "None",
+        "max_samples": "None",
+        "min_impurity_decrease": "0.0",
+        "min_samples_leaf": "3",
+        "min_samples_split": "2",
+        "min_weight_fraction_leaf": "0.0",
+        "monotonic_cst": "None",
+        "n_estimators": "150",
+        "n_jobs": "1",
+        "oob_score": "False",
+        "random_state": "42",
+        "verbose": "0",
+        "warm_start": "False"
+      },
+      "metricas": {
+        "mae_validacion": 0.328014824855387,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "a70fd81b04004d4bbaf31d5c0f26190f",
+      "nombre": "RF-100-10",
+      "parametros": {
+        "tipo": "RF-100-10",
+        "bootstrap": "True",
+        "ccp_alpha": "0.0",
+        "criterion": "squared_error",
+        "max_depth": "10",
+        "max_features": "1.0",
+        "max_leaf_nodes": "None",
+        "max_samples": "None",
+        "min_impurity_decrease": "0.0",
+        "min_samples_leaf": "3",
+        "min_samples_split": "2",
+        "min_weight_fraction_leaf": "0.0",
+        "monotonic_cst": "None",
+        "n_estimators": "100",
+        "n_jobs": "1",
+        "oob_score": "False",
+        "random_state": "42",
+        "verbose": "0",
+        "warm_start": "False"
+      },
+      "metricas": {
+        "mae_validacion": 0.3302031011931813,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "6e29543770244411a8f3c2d2d8e3c8a3",
+      "nombre": "RF-100-5",
+      "parametros": {
+        "tipo": "RF-100-5",
+        "bootstrap": "True",
+        "ccp_alpha": "0.0",
+        "criterion": "squared_error",
+        "max_depth": "5",
+        "max_features": "1.0",
+        "max_leaf_nodes": "None",
+        "max_samples": "None",
+        "min_impurity_decrease": "0.0",
+        "min_samples_leaf": "3",
+        "min_samples_split": "2",
+        "min_weight_fraction_leaf": "0.0",
+        "monotonic_cst": "None",
+        "n_estimators": "100",
+        "n_jobs": "1",
+        "oob_score": "False",
+        "random_state": "42",
+        "verbose": "0",
+        "warm_start": "False"
+      },
+      "metricas": {
+        "mae_validacion": 0.36630590561372695,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "1b5ce91dd7b64078825b5af7ede34ef0",
+      "nombre": "RF-50-5",
+      "parametros": {
+        "tipo": "RF-50-5",
+        "bootstrap": "True",
+        "ccp_alpha": "0.0",
+        "criterion": "squared_error",
+        "max_depth": "5",
+        "max_features": "1.0",
+        "max_leaf_nodes": "None",
+        "max_samples": "None",
+        "min_impurity_decrease": "0.0",
+        "min_samples_leaf": "3",
+        "min_samples_split": "2",
+        "min_weight_fraction_leaf": "0.0",
+        "monotonic_cst": "None",
+        "n_estimators": "50",
+        "n_jobs": "1",
+        "oob_score": "False",
+        "random_state": "42",
+        "verbose": "0",
+        "warm_start": "False"
+      },
+      "metricas": {
+        "mae_validacion": 0.36719557116079504,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "70bbab3a206f42cf91c76bf66c969431",
+      "nombre": "RF-150-None",
+      "parametros": {
+        "arboles": "150",
+        "profundidad": "None",
+        "semilla": "42"
+      },
+      "metricas": {
+        "mae_validacion": 0.3333269616242278,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "06c68998c3f44024996d981fc55960f5",
+      "nombre": "RF-150-10",
+      "parametros": {
+        "arboles": "150",
+        "profundidad": "10",
+        "semilla": "42"
+      },
+      "metricas": {
+        "mae_validacion": 0.328014824855387,
+        "mae_persistencia_validacion": 0.271103414823438,
+        "mae_test": 0.29474673897326487,
+        "mae_persistencia_test": 0.10649067829457365
+      }
+    },
+    {
+      "run_id": "249a3451b9e64f1c97959fb01df14509",
+      "nombre": "RF-100-10",
+      "parametros": {
+        "arboles": "100",
+        "profundidad": "10",
+        "semilla": "42"
+      },
+      "metricas": {
+        "mae_validacion": 0.3302031011931813,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "50345a3574834c2c9b7984fa77f09154",
+      "nombre": "RF-100-5",
+      "parametros": {
+        "arboles": "100",
+        "profundidad": "5",
+        "semilla": "42"
+      },
+      "metricas": {
+        "mae_validacion": 0.36630590561372695,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    },
+    {
+      "run_id": "70f4aafff81446a5bf94bbd89a8b7cb1",
+      "nombre": "RF-50-5",
+      "parametros": {
+        "arboles": "50",
+        "profundidad": "5",
+        "semilla": "42"
+      },
+      "metricas": {
+        "mae_validacion": 0.36719557116079504,
+        "mae_persistencia_validacion": 0.271103414823438
+      }
+    }
+  ],
+  "git_head": "f166ee3d9c2aca623aba0d3de2861b243e5cddee",
+  "cambios_sin_commit": true,
+  "src_sha256": "32c0b281a9a7523b2120dfd32fc97517b9f6bdd8d4b4b54ca5235794eda49897"
+}

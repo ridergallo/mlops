@@ -1,0 +1,18 @@
+{
+  "fecha_utc": "2026-11-04 05:10:33.578737+00:00",
+  "health": {
+    "estado": "ok",
+    "modelo": "colmena-temperatura-1h",
+    "version": "4",
+    "run_id": "088681f5c6a840608cd4165ac4906150"
+  },
+  "prediccion": {
+    "temperatura_predicha_c": 21.2,
+    "hora_objetivo": "2018-01-01T07:00:00+00:00",
+    "modelo": "colmena-temperatura-1h",
+    "version": "4",
+    "run_id": "088681f5c6a840608cd4165ac4906150",
+    "pod": "878fe9e9addc"
+  },
+  "entrada_invalida_status": 422
+}

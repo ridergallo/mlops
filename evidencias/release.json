@@ -1,0 +1,12 @@
+{
+  "imagen": "temperatura-mlops:1.1.1",
+  "image_id": "sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7",
+  "repo_digests": [
+    "temperatura-mlops@sha256:0a371ed006fb9f9c640206d916985ee22ff7c5eaf2cc0403964b5d95afff75e7"
+  ],
+  "src_sha256": "32c0b281a9a7523b2120dfd32fc97517b9f6bdd8d4b4b54ca5235794eda49897",
+  "codigo_imagen_coincide": true,
+  "git_head": "f166ee3d9c2aca623aba0d3de2861b243e5cddee",
+  "cambios_sin_commit": true,
+  "interfaz_http_status": 200
+}
