@@ -28,7 +28,7 @@ class Solicitud(BaseModel):
 def crear_app(cargador=cargar_modelo):
     @asynccontextmanager
     async def lifespan(app):
-        app.state.modelo, app.state.identidad, _ = cargador()
+        app.state.modelo, app.state.identidad, app.state.metadatos = cargador()
         yield
 
     app = FastAPI(title="Temperatura de colmena a una hora", lifespan=lifespan)
@@ -45,6 +45,32 @@ def crear_app(cargador=cargar_modelo):
     @app.get("/health/live")
     def live():
         return {"estado": "ok"}
+
+    @app.get("/modelo", summary="Características del modelo y pod que responde")
+    def informacion_modelo():
+        """Describe el modelo cargado en esta réplica, sin consultar de nuevo MLflow.
+
+        En Kubernetes devuelve POD_NAME; fuera del clúster, el hostname.
+        Cada solicitud identifica la réplica que la atendió, no todos los pods.
+        """
+        modelo = app.state.modelo
+        meta = app.state.metadatos
+        return {
+            **app.state.identidad,
+            "pod": os.getenv("POD_NAME") or socket.gethostname(),
+            "tipo": meta.get("tipo", type(modelo).__name__),
+            "clase": type(modelo).__name__,
+            "parametros": modelo.get_params(deep=False),
+            "objetivo": "Temperatura media de la próxima hora",
+            "horizonte_horas": 1,
+            "unidad": "°C",
+            "observaciones_requeridas": 6,
+            "caracteristicas": meta.get("features", []),
+            "mae_validacion": meta.get("mae_validacion"),
+            "entrenamiento": {k: meta.get(k) for k in (
+                "train_fin", "test_inicio", "test_fin", "filas",
+                "dataset_sha256", "politica_seleccion")},
+        }
 
     @app.post("/predecir")
     def predecir(solicitud: Solicitud):

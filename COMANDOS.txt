@@ -1,0 +1,61 @@
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
+
+docker compose up -d --build
+docker compose ps -a
+docker compose logs inicializar
+
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/desplegar_kubernetes.ps1 -Imagen temperatura-mlops:1.1.1
+python scripts/verificar_kubernetes.py
+kubectl --context docker-desktop -n apiario-v1 port-forward service/temperatura-api 18001:8000
+
+
+--levantar la solucion****************
+kubectl --context docker-desktop get nodes
+Test-Path .\data\temperatura.csv
+
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\desplegar_kubernetes.ps1 -Imagen temperatura-mlops:1.1.1
+
+kubectl --context docker-desktop -n apiario-v1 get deployments
+kubectl --context docker-desktop -n apiario-v1 get pods
+kubectl --context docker-desktop -n apiario-v1 get services,pvc
+
+Abrir la interfaz****
+kubectl --context docker-desktop -n apiario-v1 port-forward service/temperatura-api 18001:8000
+
+Interfaz: http://localhost:18001/
+Documentación API: http://localhost:18001/docs
+
+MLflow
+kubectl --context docker-desktop -n apiario-v1 port-forward service/mlflow 15051:5000
+MLflow: http://localhost:15051
+
+--volver a cargar mlflow***************
+1. Levantar MLflow
+	docker compose up -d mlflow
+2. Ejecutar un nuevo entrenamiento
+	docker compose run --rm inicializar python -m src.entrenar --datos /entrada/temperatura.csv --hasta 2017-12-31T23:00:00Z
+
+Esto utiliza el dataset preparado y registra nuevamente:
+- Cinco experimentos de Random Forest y uno de persistencia.
+- Parámetros, métricas y modelos.
+- Metadatos con el hash del dataset.
+- El archivo referencia.csv para monitorear drift.
+- Nuevas versiones en el Model Registry.
+3. Revisar los resultados
+
+Abre http://localhost:15050:
+
+--elimininar BASE MLFLOW******************
+1. Detener los contenedores y eliminar el volumen persistente
+	docker compose down --volumes
+2. Crear nuevamente MLflow y ejecutar la carga inicial
+	docker compose up -d --build
+La inicialización entrenará automáticamente los cinco Random Forest y persistencia, 
+registrará los modelos y después arrancará la API.	
+3. Seguir el entrenamiento
+	docker compose logs -f inicializar
+Cuando termine, pulsa Ctrl+C para salir de los logs; los servicios siguen	
+4. Verificar	
+	docker compose ps -a	

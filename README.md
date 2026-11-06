@@ -27,6 +27,10 @@ atribuye una mejora a IA cuando la referencia sencilla funciona mejor.
 
 ## Documentación
 
+- [Informe final en PDF](docs/informe_final/INFORME_PROYECTO_FINAL.pdf)
+- [Informe editable en Word](docs/informe_final/INFORME_PROYECTO_FINAL.docx)
+- [Paquete del informe y evidencias](docs/informe_final/INFORME_ENTREGA.zip)
+
 - [Entrega, alcance, modelo, datos y defensa](docs/ENTREGA.md)
 - [Docker, MLflow y Kubernetes](docs/DESPLIEGUE.md)
 - [Workflows CI/CD/CT y configuración pendiente en GitHub](docs/AUTOMATIZACION.md)
@@ -69,6 +73,20 @@ Sin `MLFLOW_TRACKING_URI` se utiliza MLflow local. Para consultar el servidor
 Docker desde Python: `$env:MLFLOW_TRACKING_URI = 'http://127.0.0.1:15050'`.
 
 ## API
+
+La interfaz `/` incluye un chat guiado que solicita la hora UTC y seis
+temperaturas, una por mensaje, y espera confirmación antes de llamar a
+`POST /predecir`. También permite editar las entradas, cargar un ejemplo,
+visualizar una gráfica y consultar el historial de la sesión. No utiliza un
+LLM ni servicios externos: la predicción procede del modelo MLflow de la API.
+El historial se borra al recargar la página. La información de modelo disponible
+puede proceder de otro pod; cada predicción muestra su propia versión, run y pod.
+
+`GET /modelo` devuelve nombre, versión, run, tipo de modelo, parámetros,
+características de entrada, MAE de validación y metadatos de entrenamiento.
+Incluye `pod`, la réplica que atendió esa solicitud (hostname en Docker).
+Describe el modelo cargado en memoria, aunque el alias del Registry cambie.
+No enumera todos los pods del clúster. Docker: http://localhost:18000/modelo.
 
 `POST /predecir`:
 

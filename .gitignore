@@ -6,3 +6,9 @@ mlruns/
 *.db
 docs/
 evidencias/
+scripts/capturar_informe.py
+scripts/diagrama_docker.py
+scripts/diagrama_ejecutivo.py
+scripts/diagrama_kubernetes.py
+scripts/empaquetar.py
+scripts/generar_informe.py

@@ -1,43 +1,914 @@
 <!doctype html>
 <html lang="es">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Temperatura de colmena</title>
-<style>
-body{font:17px system-ui;background:#f5f3ec;color:#23342e;margin:0;padding:3rem 1rem}
-main{max-width:620px;margin:auto;background:white;padding:2rem;border-radius:16px}
-h1{font-size:1.8rem}label{display:block;margin-top:1.4rem}input,button{font:inherit;box-sizing:border-box;width:100%;padding:.8rem;margin-top:.5rem}
-button{background:#215943;color:white;border:0;border-radius:6px;cursor:pointer}small{color:#53635b}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5f2;padding:1rem}a{color:#215943}
-</style>
-<main>
-<h1>Temperatura de colmena</h1>
-<p>Pronóstico de la temperatura media de la próxima hora.</p>
-<form id="formulario">
-<label for="hora">Cierre de la última hora observada (UTC)</label>
-<input id="hora" value="2018-01-01T06:00:00Z" required>
-<label for="temperaturas">Seis temperaturas horarias en °C</label>
-<input id="temperaturas" value="20.1, 20.3, 20.5, 20.8, 21.0, 21.2" required>
-<small>De la más antigua a la más reciente. Separar con comas y usar punto decimal. Sin horas faltantes.</small>
-<button id="enviar">Obtener pronóstico</button>
-</form>
-<pre id="resultado" role="status" aria-live="polite">Introduce las observaciones para consultar el modelo.</pre>
-<p><small>Demostración académica. No es un diagnóstico de salud de la colmena. La referencia de persistencia puede ser el modelo seleccionado.</small></p>
-<a href="/docs">Documentación de la API</a>
-</main>
-<script>
-const form=document.getElementById('formulario'), salida=document.getElementById('resultado'), boton=document.getElementById('enviar');
-form.addEventListener('submit',async event=>{
- event.preventDefault();boton.disabled=true;
- try {
-  const partes=document.getElementById('temperaturas').value.split(',');
-  const temperaturas=partes.map(v=>Number(v.trim()));
-  if(partes.some(v=>!v.trim())||temperaturas.length!==6||!temperaturas.every(Number.isFinite))throw Error('Introduce exactamente seis números.');
-  const respuesta=await fetch('/predecir',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({hora:document.getElementById('hora').value,temperaturas})});
-  const datos=await respuesta.json();
-  if(!respuesta.ok)throw Error(JSON.stringify(datos.detail));
-  salida.textContent=`Temperatura prevista: ${datos.temperatura_predicha_c.toFixed(2)} °C\nHora objetivo: ${datos.hora_objetivo}\nVersión: ${datos.version}\nRun: ${datos.run_id}\nPod: ${datos.pod}`;
- }catch(error){salida.textContent=`No se pudo predecir: ${error.message}`;}
- finally{boton.disabled=false;}
-});
-</script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Apiario · Asistente de temperatura</title>
+    <style>
+      :root {
+        --ink: #183e35;
+        --green: #246951;
+        --muted: #67776e;
+        --line: #dce5df;
+        --paper: #f5f6f0;
+        --gold: #e5b456;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          15px/1.5 system-ui,
+          sans-serif;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: wait;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible {
+        outline: 3px solid #bc8c22;
+        outline-offset: 3px;
+      }
+      header {
+        background: #173f35;
+        color: white;
+        padding: 20px max(24px, calc((100vw - 1220px) / 2));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 750;
+        letter-spacing: -0.5px;
+      }
+      .brand span {
+        color: var(--gold);
+      }
+      header a {
+        color: #e0ece5;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      main {
+        max-width: 1268px;
+        margin: auto;
+        padding: 32px 24px;
+      }
+      h1 {
+        font-size: clamp(25px, 3vw, 36px);
+        letter-spacing: -1px;
+        margin: 0 0 8px;
+      }
+      h2 {
+        font-size: 18px;
+        margin: 0;
+      }
+      p {
+        margin: 6px 0 16px;
+      }
+      .muted,
+      small {
+        color: var(--muted);
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 26px;
+      }
+      .badge {
+        font-size: 12px;
+        border: 1px solid var(--line);
+        padding: 6px 12px;
+        border-radius: 30px;
+        background: white;
+        white-space: nowrap;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .card {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px #23463105;
+      }
+      .card-head {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .subtitle {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .chat {
+        height: 430px;
+        overflow-y: auto;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        scroll-behavior: auto;
+      }
+      .msg {
+        flex-shrink: 0;
+        max-width: 92%;
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: #f0f5f1;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .msg.user {
+        align-self: flex-end;
+        background: var(--green);
+        color: white;
+        border-bottom-right-radius: 3px;
+      }
+      .msg.bot {
+        border-bottom-left-radius: 3px;
+      }
+      .msg.user small {
+        color: #c4ded2;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .msg small {
+        display: block;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+      }
+      .composer {
+        padding: 18px 22px;
+        border-top: 1px solid var(--line);
+        background: #fbfcfa;
+      }
+      .composer form {
+        display: flex;
+        gap: 8px;
+      }
+      .composer input {
+        min-width: 0;
+        flex: 1;
+      }
+      .hint {
+        display: block;
+        font-size: 12px;
+        margin: 8px 0 0;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      button {
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 9px 13px;
+        background: white;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .primary {
+        background: var(--green);
+        color: white;
+        border-color: var(--green);
+      }
+      input {
+        border: 1px solid #cbd8ce;
+        border-radius: 8px;
+        padding: 10px 12px;
+        width: 100%;
+        background: white;
+        color: var(--ink);
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .form-body {
+        padding: 22px 24px;
+      }
+      .readings {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 16px 0;
+      }
+      .reading label span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 400;
+      }
+      .result {
+        margin-top: 22px;
+        background: #edf4ed;
+        border: 1px solid #d6e3d5;
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .result-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .number {
+        font-size: 40px;
+        letter-spacing: -1px;
+        font-weight: 750;
+      }
+      .number small {
+        font-size: 20px;
+      }
+      .detail {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+        margin-top: 12px;
+      }
+      .chart {
+        width: 100%;
+        height: 160px;
+        display: block;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .legend b {
+        color: var(--green);
+      }
+      .legend .future {
+        color: #aa6e0b;
+      }
+      .error {
+        color: #a0372c;
+        font-size: 13px;
+        min-height: 20px;
+        margin-top: 10px;
+      }
+      .history {
+        margin-top: 22px;
+        padding: 20px 24px;
+      }
+      .history-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .history-item {
+        font-size: 12px;
+        padding: 9px 12px;
+        background: #f6f8f4;
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+      }
+      details {
+        margin-top: 18px;
+        font-size: 12px;
+      }
+      summary {
+        cursor: pointer;
+      }
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: #f5f7f3;
+        padding: 12px;
+        border-radius: 8px;
+      }
+      footer {
+        font-size: 12px;
+        color: var(--muted);
+        padding-top: 24px;
+        max-width: 880px;
+      }
+      .progress {
+        height: 4px;
+        background: #e7eee7;
+      }
+      .progress div {
+        height: 100%;
+        width: 0;
+        background: var(--gold);
+        transition: width 0.2s;
+      }
+      #estado {
+        white-space: normal;
+      }
+      @media (max-width: 850px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .chat {
+          height: 340px;
+        }
+        .top {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        main {
+          padding: 24px 14px;
+        }
+        .card-head,
+        .form-body {
+          padding: 18px;
+        }
+        .number {
+          font-size: 34px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">⬡ <span>Apiario</span> / Predicciones</div>
+      <a href="/docs">Explorar API ↗</a>
+    </header>
+    <main>
+      <div class="top">
+        <div>
+          <h1>La próxima hora de tu colmena</h1>
+          <p class="muted">
+            Convierte seis observaciones en un pronóstico de temperatura.
+          </p>
+        </div>
+        <span class="badge" id="estado" role="status"
+          >Consultando servicio…</span
+        >
+      </div>
+      <div class="grid">
+        <section class="card" aria-labelledby="chat-title">
+          <div class="card-head">
+            <div>
+              <h2 id="chat-title">Asistente de predicción</h2>
+              <div class="subtitle">
+                Conversación guiada · temperatura a 1 hora
+              </div>
+            </div>
+            <span class="badge" id="paso">Inicio</span>
+          </div>
+          <div class="progress" aria-hidden="true">
+            <div id="progreso"></div>
+          </div>
+          <div
+            id="mensajes"
+            class="chat"
+            role="log"
+            aria-live="polite"
+            aria-label="Conversación con el asistente"
+          ></div>
+          <div class="composer">
+            <form id="chat-form">
+              <label for="mensaje" hidden>Tu respuesta</label
+              ><input
+                id="mensaje"
+                autocomplete="off"
+                placeholder="Escribe aquí…"
+                required
+                aria-describedby="ayuda-chat"
+              /><button class="primary" id="chat-send">Enviar ↑</button>
+            </form>
+            <small id="ayuda-chat" class="hint"
+              >El asistente te pedirá los datos paso a paso.</small
+            >
+            <div class="actions">
+              <button type="button" id="ejemplo">Usar datos de ejemplo</button
+              ><button type="button" id="reiniciar">Nueva conversación</button>
+            </div>
+          </div>
+        </section>
+        <div>
+          <section class="card" aria-labelledby="datos-title">
+            <div class="card-head">
+              <div>
+                <h2 id="datos-title">Observaciones horarias</h2>
+                <div class="subtitle">
+                  Revisa o edita los datos antes de predecir
+                </div>
+              </div>
+              <span class="badge">°C · UTC</span>
+            </div>
+            <div class="form-body">
+              <form id="formulario">
+                <label for="hora"
+                  >Cierre de la última hora observada (UTC)</label
+                ><input
+                  id="hora"
+                  type="datetime-local"
+                  step="3600"
+                  required
+                  aria-describedby="ayuda-hora"
+                /><small id="ayuda-hora"
+                  >Hora exacta, sin minutos. Todos los horarios se interpretan
+                  en UTC.</small
+                >
+                <div class="readings" id="lecturas"></div>
+                <button id="enviar" class="primary" style="width: 100%">
+                  Predecir próxima hora →
+                </button>
+                <div id="error" class="error" role="alert"></div>
+              </form>
+              <div
+                class="result"
+                id="resultado"
+                role="status"
+                aria-live="polite"
+              >
+                <div class="subtitle">PRONÓSTICO A UNA HORA</div>
+                <div class="result-main">
+                  <div class="number" id="valor">— <small>°C</small></div>
+                  <span class="badge" id="hora-objetivo">Esperando datos</span>
+                </div>
+                <p id="explicacion" class="muted">
+                  Completa la conversación o introduce tus observaciones.
+                </p>
+                <svg
+                  id="grafica"
+                  class="chart"
+                  viewBox="0 0 440 160"
+                  role="img"
+                  aria-label="Gráfica de las seis temperaturas observadas y el pronóstico"
+                ></svg>
+                <div class="legend">
+                  <span><b>●</b> Observaciones</span
+                  ><span><b class="future">●</b> Pronóstico</span>
+                </div>
+                <div id="trazabilidad" class="detail"></div>
+              </div>
+              <details>
+                <summary>Modelo disponible en el servicio</summary>
+                <pre id="modelo">Consultando…</pre>
+              </details>
+            </div>
+          </section>
+          <section class="card history">
+            <h2>Últimas consultas</h2>
+            <div class="subtitle">Solo durante esta sesión de la página</div>
+            <div class="history-list" id="historial">
+              <small>Aún no hay predicciones.</small>
+            </div>
+          </section>
+        </div>
+      </div>
+      <footer>
+        Este chat guía la captura de datos; la predicción la realiza el modelo
+        registrado en MLflow. No es un asistente de lenguaje general ni un
+        diagnóstico de salud. Actualmente solo se predice temperatura. Las seis
+        medias deben ser consecutivas y pertenecer a la misma colmena. Si el
+        modelo elegido es persistencia, su pronóstico será igual al último valor
+        observado.
+      </footer>
+    </main>
+    <script>
+      "use strict";
+      const $ = (id) => document.getElementById(id);
+      let etapa = "hora",
+        indice = 0,
+        ocupado = false,
+        confirmado = false;
+      const historial = [];
+      const ejemplo = {
+        hora: "2018-01-01T06:00",
+        temperaturas: [20.1, 20.3, 20.5, 20.8, 21, 21.2],
+      };
+      for (let i = 0; i < 6; i++) {
+        const box = document.createElement("div");
+        box.className = "reading";
+        const label = document.createElement("label");
+        label.htmlFor = "temp-" + i;
+        label.textContent = i === 5 ? "Última hora" : `Hace ${5 - i} h`;
+        const time = document.createElement("span");
+        time.id = "tiempo-" + i;
+        time.textContent = "Sin horario";
+        label.append(time);
+        const input = document.createElement("input");
+        Object.assign(input, {
+          id: "temp-" + i,
+          type: "number",
+          min: "-40",
+          max: "80",
+          step: "any",
+          required: true,
+          placeholder: "°C",
+        });
+        box.append(label, input);
+        $("lecturas").append(box);
+      }
+      function decir(texto, usuario = false) {
+        const div = document.createElement("div");
+        div.className = "msg " + (usuario ? "user" : "bot");
+        const who = document.createElement("small");
+        who.textContent = usuario ? "Tú" : "Asistente";
+        const body = document.createElement("span");
+        body.textContent = texto;
+        div.append(who, body);
+        $("mensajes").append(div);
+        $("mensajes").scrollTop = $("mensajes").scrollHeight;
+      }
+      function fecha(valor) {
+        if (!/^\d{4}-\d{2}-\d{2}T\d{2}:00$/.test(valor))
+          throw Error("Indica una hora exacta: AAAA-MM-DDTHH:00 (UTC).");
+        const d = new Date(valor + ":00Z");
+        if (
+          !Number.isFinite(d.getTime()) ||
+          d.toISOString().slice(0, 16) !== valor
+        )
+          throw Error("La fecha no es válida.");
+        return d;
+      }
+      function formato(d) {
+        return d.toISOString().slice(0, 16).replace("T", " ") + " UTC";
+      }
+      function actualizarHoras() {
+        try {
+          const d = fecha($("hora").value);
+          for (let i = 0; i < 6; i++)
+            $("tiempo-" + i).textContent =
+              new Date(d.getTime() - (5 - i) * 3600000)
+                .toISOString()
+                .slice(11, 16) + " UTC";
+        } catch {
+          for (let i = 0; i < 6; i++)
+            $("tiempo-" + i).textContent = "Sin horario";
+        }
+      }
+      function leer() {
+        const d = fecha($("hora").value);
+        const valores = Array.from({ length: 6 }, (_, i) => {
+          const raw = $("temp-" + i).value;
+          if (raw.trim() === "")
+            throw Error(
+              "Faltan temperaturas: completa las seis observaciones.",
+            );
+          const n = Number(raw);
+          if (!Number.isFinite(n) || n < -40 || n > 80)
+            throw Error("Cada temperatura debe estar entre -40 y 80 °C.");
+          return n;
+        });
+        return { hora: d.toISOString(), temperaturas: valores };
+      }
+      function progreso(n, label) {
+        $("progreso").style.width = (n / 7) * 100 + "%";
+        $("paso").textContent = label;
+      }
+      function pedirTemperatura() {
+        progreso(indice + 1, `Lectura ${indice + 1} / 6`);
+        const d = fecha($("hora").value);
+        d.setUTCHours(d.getUTCHours() - (5 - indice));
+        decir(
+          `¿Cuál fue la temperatura media de la hora que cerró el ${formato(d)}? (${indice + 1} de 6).`,
+        );
+        $("mensaje").placeholder = "Por ejemplo: 20.5";
+      }
+      function revisar() {
+        etapa = "confirmar";
+        confirmado = false;
+        progreso(7, "Revisar datos");
+        const p = leer();
+        decir(
+          `Datos preparados para ${formato(new Date(p.hora))}:\n${p.temperaturas.join(" · ")} °C, de antigua a reciente.\nPuedes editarlos en el panel. Escribe «predecir» o pulsa el botón para consultar el modelo.`,
+        );
+        $("mensaje").placeholder = "Escribe predecir";
+      }
+      function iniciar() {
+        etapa = "hora";
+        indice = 0;
+        confirmado = false;
+        $("mensajes").replaceChildren();
+        $("hora").value = "";
+        for (let i = 0; i < 6; i++) $("temp-" + i).value = "";
+        $("mensaje").value = "";
+        $("error").textContent = "";
+        $("valor").textContent = "— °C";
+        $("hora-objetivo").textContent = "Esperando datos";
+        $("explicacion").textContent =
+          "Completa la conversación o introduce tus observaciones.";
+        $("trazabilidad").textContent = "";
+        $("grafica").replaceChildren();
+        progreso(0, "Hora de cierre");
+        actualizarHoras();
+        decir(
+          "Vamos a predecir la temperatura de la próxima hora. Primero, ¿cuál es la fecha y hora de cierre de tu última observación? Usa UTC, por ejemplo: 2018-01-01 06:00.",
+        );
+        $("mensaje").placeholder = "AAAA-MM-DD HH:00";
+      }
+      function svgElement(name, attrs) {
+        const e = document.createElementNS("http://www.w3.org/2000/svg", name);
+        for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+        return e;
+      }
+      function dibujar(values) {
+        const svg = $("grafica");
+        svg.replaceChildren();
+        let low = Math.min(...values) - 0.5,
+          high = Math.max(...values) + 0.5;
+        const x = (i) => 35 + i * 61,
+          y = (v) => 125 - ((v - low) / (high - low)) * 100;
+        for (let j = 0; j < 3; j++) {
+          let v = low + ((high - low) * j) / 2;
+          svg.append(
+            svgElement("line", {
+              x1: 34,
+              x2: 405,
+              y1: y(v),
+              y2: y(v),
+              stroke: "#d6e2d6",
+            }),
+          );
+          let t = svgElement("text", {
+            x: 0,
+            y: y(v) + 4,
+            "font-size": 10,
+            fill: "#67776e",
+          });
+          t.textContent = v.toFixed(1);
+          svg.append(t);
+        }
+        svg.append(
+          svgElement("polyline", {
+            points: values
+              .slice(0, 6)
+              .map((v, i) => `${x(i)},${y(v)}`)
+              .join(" "),
+            fill: "none",
+            stroke: "#246951",
+            "stroke-width": 2.5,
+          }),
+        );
+        svg.append(
+          svgElement("line", {
+            x1: x(5),
+            x2: x(6),
+            y1: y(values[5]),
+            y2: y(values[6]),
+            stroke: "#aa6e0b",
+            "stroke-width": 2,
+            "stroke-dasharray": "5 4",
+          }),
+        );
+        values.forEach((v, i) => {
+          svg.append(
+            svgElement("circle", {
+              cx: x(i),
+              cy: y(v),
+              r: 4,
+              fill: i === 6 ? "#aa6e0b" : "#246951",
+            }),
+          );
+          let t = svgElement("text", {
+            x: x(i),
+            y: 150,
+            "font-size": 10,
+            "text-anchor": "middle",
+            fill: "#67776e",
+          });
+          t.textContent = i === 6 ? "+1 h" : i === 5 ? "Actual" : `${i - 5} h`;
+          svg.append(t);
+        });
+      }
+      async function request(url, options = {}) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 20000);
+        try {
+          const r = await fetch(url, { ...options, signal: controller.signal });
+          if (!r.ok) {
+            if (r.status === 422)
+              throw Error(
+                "La API rechazó los datos. Revisa la hora UTC y las seis temperaturas.",
+              );
+            throw Error(
+              `El servicio devolvió HTTP ${r.status}. Intenta nuevamente.`,
+            );
+          }
+          return await r.json();
+        } catch (e) {
+          if (e.name === "AbortError")
+            throw Error(
+              "El servicio tardó demasiado. Puedes volver a intentarlo.",
+            );
+          throw e;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      function bloquear(value) {
+        ocupado = value;
+        for (const id of [
+          "enviar",
+          "chat-send",
+          "mensaje",
+          "ejemplo",
+          "reiniciar",
+          "hora",
+          ...Array.from({ length: 6 }, (_, i) => "temp-" + i),
+        ])
+          $(id).disabled = value;
+        $("enviar").textContent = value
+          ? "Consultando modelo…"
+          : "Predecir próxima hora →";
+      }
+      async function predecir() {
+        if (ocupado) return;
+        let payload;
+        try {
+          payload = leer();
+        } catch (e) {
+          $("error").textContent = e.message;
+          decir(e.message);
+          return;
+        }
+        bloquear(true);
+        $("error").textContent = "";
+        decir("Consultando el modelo registrado…");
+        try {
+          const r = await request("/predecir", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (!Number.isFinite(r.temperatura_predicha_c))
+            throw Error("El servicio no devolvió una predicción válida.");
+          $("valor").replaceChildren(
+            document.createTextNode(r.temperatura_predicha_c.toFixed(2) + " "),
+          );
+          const unit = document.createElement("small");
+          unit.textContent = "°C";
+          $("valor").append(unit);
+          $("hora-objetivo").textContent = formato(new Date(r.hora_objetivo));
+          const delta = r.temperatura_predicha_c - payload.temperaturas[5];
+          $("explicacion").textContent =
+            `${delta >= 0 ? "+" : ""}${delta.toFixed(2)} °C respecto a la última observación. Resultado calculado, no una lectura del sensor.`;
+          $("trazabilidad").textContent =
+            `Versión: ${r.version} · Run: ${r.run_id} · Pod: ${r.pod}`;
+          dibujar([...payload.temperaturas, r.temperatura_predicha_c]);
+          decir(
+            `Temperatura prevista: ${r.temperatura_predicha_c.toFixed(2)} °C\nHora objetivo: ${formato(new Date(r.hora_objetivo))}\nVersión: ${r.version}\nPod: ${r.pod}\nPuedes editar los datos y consultar de nuevo, o iniciar una nueva conversación.`,
+          );
+          historial.unshift({ r, payload });
+          historial.splice(5);
+          $("historial").replaceChildren();
+          for (const h of historial) {
+            const item = document.createElement("div");
+            item.className = "history-item";
+            item.textContent = `${formato(new Date(h.r.hora_objetivo))} · ${h.r.temperatura_predicha_c.toFixed(2)} °C · v${h.r.version} · ${h.r.pod}`;
+            $("historial").append(item);
+          }
+          etapa = "terminado";
+          confirmado = true;
+          progreso(7, "Consulta completada");
+        } catch (e) {
+          $("error").textContent = e.message;
+          decir(
+            "No se pudo completar la consulta: " +
+              e.message +
+              " Conservé los datos para que puedas reintentar.",
+          );
+        } finally {
+          bloquear(false);
+        }
+      }
+      $("chat-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (ocupado) return;
+        const raw = $("mensaje").value.trim();
+        if (!raw) return;
+        decir(raw, true);
+        $("mensaje").value = "";
+        const command = raw.toLowerCase();
+        if (["reiniciar", "nuevo", "nueva consulta"].includes(command)) {
+          iniciar();
+          return;
+        }
+        if (["ayuda", "hola"].includes(command)) {
+          decir(
+            "Puedo guiarte para pronosticar temperatura. Indica la hora UTC y después seis temperaturas, una por mensaje. También puedes completar el panel o usar el ejemplo.",
+          );
+          return;
+        }
+        if (["predecir", "confirmar"].includes(command)) {
+          await predecir();
+          return;
+        }
+        try {
+          if (etapa === "hora") {
+            let value = raw.replace(" ", "T").replace(/Z$/, "");
+            if (/^\d{4}-\d{2}-\d{2}T\d{2}:00:00$/.test(value))
+              value = value.slice(0, 16);
+            fecha(value);
+            $("hora").value = value;
+            actualizarHoras();
+            etapa = "temperaturas";
+            indice = 0;
+            pedirTemperatura();
+          } else if (etapa === "temperaturas") {
+            if (!/^[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)$/.test(raw))
+              throw Error(
+                "Escribe una sola temperatura, por ejemplo 20.5 °C, sin escribir la unidad.",
+              );
+            const n = Number(raw.replace(",", "."));
+            if (n < -40 || n > 80)
+              throw Error("La temperatura debe estar entre -40 y 80 °C.");
+            $("temp-" + indice).value = n;
+            indice++;
+            if (indice === 6) revisar();
+            else pedirTemperatura();
+          } else {
+            decir(
+              "Para consultar, escribe «predecir». Puedes cambiar los valores en el panel o pulsar «Nueva conversación».",
+            );
+          }
+        } catch (error) {
+          decir(error.message);
+        }
+      });
+      $("formulario").addEventListener("submit", (e) => {
+        e.preventDefault();
+        predecir();
+      });
+      $("hora").addEventListener("input", actualizarHoras);
+      $("formulario").addEventListener("input", () => {
+        if (confirmado) {
+          $("explicacion").textContent =
+            "Datos modificados: el resultado mostrado corresponde a la consulta anterior. Vuelve a predecir.";
+          confirmado = false;
+        }
+      });
+      $("ejemplo").addEventListener("click", () => {
+        if (ocupado) return;
+        $("hora").value = ejemplo.hora;
+        ejemplo.temperaturas.forEach((v, i) => ($("temp-" + i).value = v));
+        actualizarHoras();
+        $("explicacion").textContent =
+          "Ejemplo cargado. Pulsa predecir para obtener un nuevo resultado.";
+        decir(
+          "Cargué seis valores de ejemplo. Son datos de demostración, no mediciones actuales.",
+        );
+        revisar();
+      });
+      $("reiniciar").addEventListener("click", () => {
+        if (!ocupado) iniciar();
+      });
+      async function estado() {
+        try {
+          const m = await request("/modelo");
+          $("estado").textContent =
+            `Servicio disponible · ${m.tipo} · v${m.version}`;
+          $("modelo").textContent = JSON.stringify(m, null, 2);
+        } catch {
+          try {
+            const h = await request("/health/ready");
+            $("estado").textContent = `Servicio disponible · v${h.version}`;
+            $("modelo").textContent =
+              "Este despliegue responde, pero no expone todavía /modelo. La predicción indicará su versión y pod.";
+          } catch {
+            $("estado").textContent = "Servicio no disponible";
+            $("modelo").textContent =
+              "No fue posible consultar el servicio. Revisa el despliegue.";
+          }
+        }
+      }
+      iniciar();
+      estado();
+    </script>
+  </body>
 </html>
