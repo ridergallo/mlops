@@ -27,10 +27,6 @@ atribuye una mejora a IA cuando la referencia sencilla funciona mejor.
 
 ## Documentación
 
-- [Informe final en PDF](docs/informe_final/INFORME_PROYECTO_FINAL.pdf)
-- [Informe editable en Word](docs/informe_final/INFORME_PROYECTO_FINAL.docx)
-- [Paquete del informe y evidencias](docs/informe_final/INFORME_ENTREGA.zip)
-
 - [Entrega, alcance, modelo, datos y defensa](docs/ENTREGA.md)
 - [Docker, MLflow y Kubernetes](docs/DESPLIEGUE.md)
 - [Workflows CI/CD/CT y configuración pendiente en GitHub](docs/AUTOMATIZACION.md)
